@@ -3,9 +3,9 @@
  *
  * Read input from a joystick (/dev/input/js0)
  * Created w/aid of Joystick API Documentation
+ * For BeagleBone Blue
  *
  * Manuel Saldana
- * Date created: 29 July 2020
  *
  */
 
@@ -26,9 +26,8 @@
 int main()
 {
 	// INIT
-	// open device [in blocking mode]
+	// open device [in non-blocking mode]
 	// fd is file descriptor
-	// open for read only
 	int fd = open("/dev/input/js0", O_NONBLOCK);
 
 	// IOCTLs
@@ -121,7 +120,7 @@ int main()
 			printf("BUTTONS: ");
 			for(int i = 0; i < number_of_buttons; i++)
 			{
-				printf("%2d:%s ", i, button[i] ? "on":"off");
+				printf("%2d:%s ", i, button[i] ? "1":"0");
 			}
 		}
 		// flush

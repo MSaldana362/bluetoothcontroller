@@ -1,10 +1,13 @@
 /**
  * @file test_joy_nonblock.c
  *
- * Mimics the rc_project_template.c file
+ * Created using the rc_project_template.c file
  * Read input from a joystick (/dev/input/js0)
  * Control LEDs on BeagleBone Blue
+ * Non-blocking mode
  * 
+ * Manuel Saldana
+ *
  */
 
 #include <stdio.h>
@@ -24,6 +27,8 @@
 
 #include <robotcontrol.h> // includes ALL Robot Control subsystems
 
+// VARIABLES
+static int counter;
 
 /**
  * This template contains these critical components
@@ -74,7 +79,8 @@ int main()
 
 
 	printf("\nPress and release BUTTON 0 to turn green LED on and off\n");
-	printf("Press BUTTON 2 to exit\n");
+	printf("Hold BUTTON 1 (or hold AXIS 5) and move AXIS 1 to change counter value\n");
+	printf("Press BUTTON 3 to exit\n");
 
 	// Keep looping until state changes to EXITING
 	rc_set_state(RUNNING);
@@ -104,15 +110,10 @@ int main()
 				break;
 		}
 
-		// do things based on buttons pressed
-		if(button[1])
-		{
-			rc_led_set(RC_LED_RED, 0);
-			float axis_5_val = axis[5];
-			float blink_freq = (axis_5_val + 32767)/(32767*2)*10;
-			rc_led_blink(RC_LED_GREEN, blink_freq, 2);
-		}
-		else if(button[0])
+		// DO THINGS
+
+		// change state of green LED
+		if(button[0])
 		{
 			rc_led_set(RC_LED_GREEN, 1);
 			rc_led_set(RC_LED_RED, 0);
@@ -123,10 +124,39 @@ int main()
 			rc_led_set(RC_LED_RED, 1);
 		}
 
-		if(button[2])
+		// change value of counter
+		if(button[1] || axis[5] > -32767)
+		{
+			if(axis[1] > 0)
+			{
+				counter++;
+			}
+			else if(axis[1] < 0)
+			{
+				counter--;
+			}
+		}
+
+		// exit program
+		if(button[3])
 		{
 			rc_set_state(EXITING);
+			printf("\nGoodbye...\n");
+			continue;
 		}
+
+		// display values of specific buttons and axes
+		printf("\r");
+		printf("BUTTONS: ");
+		printf("%2d:%s ", 0, button[0] ? "1":"0");
+		printf("%2d:%s ", 1, button[1] ? "1":"0");
+		printf("%2d:%s ", 3, button[3] ? "1":"0");
+		printf(" | AXES: ");
+		printf("%2d:%6d ", 1, axis[1]);
+		printf("%2d:%6d ", 5, axis[5]);
+		printf(" | COUNTER: ");
+		printf("%d ", counter);
+		fflush(stdout);
 
 		// always sleep at some point
 		rc_usleep(100000);
