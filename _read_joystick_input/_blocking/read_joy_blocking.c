@@ -3,9 +3,9 @@
  *
  * Read input from a joystick (/dev/input/js0)
  * Created w/aid of Joystick API Documentation
+ * For BeagleBone Blue
  *
  * Manuel Saldana
- * Date created: 29 July 2020
  *
  */
 
@@ -28,7 +28,6 @@ int main()
 	// INIT
 	// open device [in blocking mode]
 	// fd is file descriptor
-	// open for read only
 	int fd = open("/dev/input/js0", O_RDONLY);
 
 	// IOCTLs
@@ -55,11 +54,11 @@ int main()
 		// EVENT READING
 		// creating a js_event struct called e
 		// (e is of type js_event)
+		// js_event is defined in joystick.h
 		struct js_event e;
 		// read data previously written to a file
 		// read sizeof(e) bytes from file descriptor fd into buffer pointed to by &e
 		read(fd, &e, sizeof(e));
-		// js_event is defined in joystick.h
 
 		// JS_EVENT.TYPE
 		// possible values for type are defined in joystick.h
@@ -112,7 +111,7 @@ int main()
 			printf("BUTTONS: ");
 			for(int i = 0; i < number_of_buttons; i++)
 			{
-				printf("%2d:%s ", i, button[i] ? "on":"off");
+				printf("%2d:%s ", i, button[i] ? "1":"0");
 			}
 		}
 		// flush
