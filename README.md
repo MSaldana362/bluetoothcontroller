@@ -1,2 +1,2 @@
-# BT_BB
-BlueTooth Controller Project for BeagleBone Blue using DualShock 4 and Xbox One game controllers
+# Bluetooth Controller for BeagleBone Blue
+BlueTooth Controller Project for BeagleBone Blue using DualShock 4 and Xbox One S game controllers
